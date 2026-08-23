@@ -1,0 +1,33 @@
+[project]
+name = "swarmsre-cli"
+version = "0.1.0"
+description = "Command-line interface for the SwarmSRE AI-powered SRE platform"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.15.0",
+    "rich>=14.0.0",
+    "httpx>=0.28.0",
+    "websockets>=15.0",
+]
+
+[project.scripts]
+swarmsre = "swarmsre.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.hatch.build.targets.wheel]
+packages = ["swarmsre"]
