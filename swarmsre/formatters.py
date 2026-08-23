@@ -103,6 +103,14 @@ def render_incident_detail(inc: dict) -> None:
     console.print(Panel(header, title="📋 Incident Detail", border_style="cyan"))
     console.print(Panel(detail_text, border_style="bright_black"))
 
+    # Agent Trace
+    evidence_chain = inc.get("evidence_chain", [])
+    messages = [e.get("message") for e in evidence_chain if isinstance(e, dict) and "message" in e]
+    
+    if messages:
+        trace_text = "\n".join([f"[dim]❯[/dim] [white]{m}[/white]" for m in messages])
+        console.print(Panel(trace_text, title="🤖 Agent Trace", border_style="yellow"))
+
     # RCA Summary
     rca = inc.get("rca_summary")
     if rca:

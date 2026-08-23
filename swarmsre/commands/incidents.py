@@ -21,8 +21,11 @@ def list_incidents():
     try:
         incidents = client.list_incidents()
         render_incident_table(incidents)
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error fetching incidents:[/red] {e}")
+        print(f"[red]Error fetching incidents:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()
@@ -35,6 +38,9 @@ def get_incident(incident_id: str = typer.Argument(..., help="The incident ID"))
     try:
         inc = client.get_incident(incident_id)
         render_incident_detail(inc)
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 404:
             print(f"[red]Incident '{incident_id}' not found.[/red]")
@@ -42,7 +48,7 @@ def get_incident(incident_id: str = typer.Argument(..., help="The incident ID"))
             print(f"[red]API Error:[/red] {e}")
         raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error fetching incident:[/red] {e}")
+        print(f"[red]Error fetching incident:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()
@@ -55,6 +61,9 @@ def approve_incident(incident_id: str = typer.Argument(..., help="The incident I
     try:
         inc = client.approve_incident(incident_id)
         print(f"[bold green]✅ Approved![/bold green] Patch for incident [cyan]{incident_id}[/cyan] is now being executed.")
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 400:
             print(f"[red]Validation Error:[/red] {e.response.json().get('detail', 'Cannot approve this incident.')}")
@@ -62,7 +71,7 @@ def approve_incident(incident_id: str = typer.Argument(..., help="The incident I
             print(f"[red]API Error:[/red] {e}")
         raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error approving incident:[/red] {e}")
+        print(f"[red]Error approving incident:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()

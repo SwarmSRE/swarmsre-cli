@@ -17,8 +17,11 @@ def list_audit():
     try:
         entries = client.list_audit()
         render_audit_table(entries)
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error fetching audit trail:[/red] {e}")
+        print(f"[red]Error fetching audit trail:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()
@@ -34,11 +37,14 @@ def get_audit(incident_id: str = typer.Argument(..., help="The incident ID")):
             print(f"[yellow]No audit entries found for incident '{incident_id}'.[/yellow]")
         else:
             render_audit_table(entries)
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except httpx.HTTPStatusError as e:
         print(f"[red]API Error:[/red] {e}")
         raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error fetching audit trail:[/red] {e}")
+        print(f"[red]Error fetching audit trail:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()

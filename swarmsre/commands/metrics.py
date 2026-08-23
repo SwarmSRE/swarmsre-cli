@@ -16,8 +16,11 @@ def get_dora():
     try:
         data = client.get_dora_metrics()
         render_dora_metrics(data)
+    except httpx.ConnectError:
+        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        raise typer.Exit(1)
     except Exception as e:
-        print(f"[red]Error fetching metrics:[/red] {e}")
+        print(f"[red]Error fetching metrics:[/red] {type(e).__name__}: {e}")
         raise typer.Exit(1)
     finally:
         client.close()
