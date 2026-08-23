@@ -22,7 +22,7 @@ def health():
         print(f"Details: {e}")
         raise typer.Exit(code=1)
     except Exception as e:
-        print(f"[bold red]❌ Health check failed![/bold red]")
+        print("[bold red]❌ Health check failed![/bold red]")
         print(f"Details: {e}")
         raise typer.Exit(code=1)
     finally:

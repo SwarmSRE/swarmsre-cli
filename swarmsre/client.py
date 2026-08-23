@@ -4,7 +4,6 @@ import os
 
 import httpx
 
-
 DEFAULT_SERVER = "http://localhost:8000"
 
 

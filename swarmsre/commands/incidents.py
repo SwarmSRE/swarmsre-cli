@@ -59,7 +59,7 @@ def approve_incident(incident_id: str = typer.Argument(..., help="The incident I
     """Approve a proposed patch (HITL)."""
     client = SwarmSREClient()
     try:
-        inc = client.approve_incident(incident_id)
+        client.approve_incident(incident_id)
         print(f"[bold green]✅ Approved![/bold green] Patch for incident [cyan]{incident_id}[/cyan] is now being executed.")
     except httpx.ConnectError:
         print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
@@ -82,7 +82,7 @@ def reject_incident(incident_id: str = typer.Argument(..., help="The incident ID
     """Reject a proposed patch (HITL)."""
     client = SwarmSREClient()
     try:
-        inc = client.reject_incident(incident_id)
+        client.reject_incident(incident_id)
         print(f"[bold orange]❌ Rejected.[/bold orange] Patch for incident [cyan]{incident_id}[/cyan] was rejected.")
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 400:
@@ -122,7 +122,7 @@ def watch_incidents():
     client = SwarmSREClient()
     ws_url = client.ws_url()
     client.close()
-    
+
     try:
         asyncio.run(_watch(ws_url))
     except KeyboardInterrupt:

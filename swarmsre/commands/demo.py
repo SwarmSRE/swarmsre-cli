@@ -1,6 +1,7 @@
 """Demo automation commands."""
 
 import subprocess
+
 import typer
 from rich import print
 

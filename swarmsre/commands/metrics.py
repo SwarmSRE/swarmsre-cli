@@ -1,5 +1,6 @@
 """Metrics commands."""
 
+import httpx
 import typer
 from rich import print
 
@@ -17,7 +18,10 @@ def get_dora():
         data = client.get_dora_metrics()
         render_dora_metrics(data)
     except httpx.ConnectError:
-        print(f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. Is the backend running?")
+        print(
+            f"[red]Connection Error:[/red] Cannot connect to control plane at {client.base_url}. "
+            "Is the backend running?"
+        )
         raise typer.Exit(1)
     except Exception as e:
         print(f"[red]Error fetching metrics:[/red] {type(e).__name__}: {e}")

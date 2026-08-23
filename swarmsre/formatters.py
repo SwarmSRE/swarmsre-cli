@@ -106,7 +106,7 @@ def render_incident_detail(inc: dict) -> None:
     # Agent Trace
     evidence_chain = inc.get("evidence_chain", [])
     messages = [e.get("message") for e in evidence_chain if isinstance(e, dict) and "message" in e]
-    
+
     if messages:
         trace_text = "\n".join([f"[dim]❯[/dim] [white]{m}[/white]" for m in messages])
         console.print(Panel(trace_text, title="🤖 Agent Trace", border_style="yellow"))
@@ -194,7 +194,9 @@ def render_ws_event(event: dict) -> None:
     data = event.get("data", {})
 
     if event_type == "INCIDENT_CREATED":
-        console.print(f"[bold green]▶ NEW[/bold green]  {data.get('title', '?')}  [dim]({data.get('id', '?')[:16]})[/dim]")
+        console.print(
+            f"[bold green]▶ NEW[/bold green]  {data.get('title', '?')}  [dim]({data.get('id', '?')[:16]})[/dim]"
+        )
     elif event_type == "INCIDENT_UPDATED":
         status = data.get("status", "?")
         badge = _status_badge(status)
@@ -206,6 +208,8 @@ def render_ws_event(event: dict) -> None:
             (f"  ({data.get('id', '?')[:16]})", "dim"),
         ))
     elif event_type == "INCIDENT_FAILED":
-        console.print(f"[bold red]▶ FAIL[/bold red] {data.get('title', '?')}  [dim]error={data.get('error', '?')}[/dim]")
+        console.print(
+            f"[bold red]▶ FAIL[/bold red] {data.get('title', '?')}  [dim]error={data.get('error', '?')}[/dim]"
+        )
     else:
         console.print(f"[dim]▶ {event_type}[/dim]")
